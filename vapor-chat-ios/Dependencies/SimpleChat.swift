@@ -202,6 +202,7 @@ class ChatController : UIViewController, UITableViewDelegate, UITableViewDataSou
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setup()
+		chatInput.textView.text = "{\"uri\": \"ping\"}"
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -432,6 +433,7 @@ class ChatInput : UIView, StretchyTextViewDelegate {
         textView.bounds = UIEdgeInsetsInsetRect(self.bounds, self.textViewInsets)
         textView.stretchyTextViewDelegate = self
         textView.center = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+		//textView.text = "{\"type\", \"ping\"}"
         self.styleTextView()
         self.addSubview(textView)
     }
@@ -527,7 +529,7 @@ class ChatInput : UIView, StretchyTextViewDelegate {
     func sendButtonPressed(_ sender: UIButton) {
         if self.textView.text.characters.count > 0 {
             self.delegate?.chatInput(self, didSendMessage: self.textView.text)
-            self.textView.text = ""
+            //self.textView.text = ""
         }
     }
 }

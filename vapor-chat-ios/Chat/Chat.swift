@@ -1,6 +1,7 @@
 import Starscream
 
-private let chatURL = URL(string: "wss://vapor-chat.herokuapp.com/chat")!
+//private let chatURL = URL(string: "wss://vapor-chat.herokuapp.com/chat")!
+private let chatURL = URL(string: "ws://127.0.0.1:8080/livecast")!
 
 internal class ChatModel {
 
@@ -15,12 +16,17 @@ internal class ChatModel {
     }
 
     func start() {
+		webSocket.headers["Authorization"] = "Bearer 3gMQkpHJ02iS/bgfMDwTtw=="
         webSocket.onConnect = { [unowned webSocket, weak self] in
             guard let username = self?.username else { return }
             webSocket.write(string: "{\"username\":\"\(username)\"}")
         }
 
         webSocket.onText = { [unowned self] text in
+			print("received: \(text)")
+            let message = ChatMessage(sentBy: .opponent, content: "\(text)", timeStamp: nil, imageUrl: nil)
+            self.controller?.addNewMessage(message)
+			/*
             guard let data = text.data(using: .utf8) else { return }
 
             do {
@@ -36,6 +42,7 @@ internal class ChatModel {
             catch {
                 print(error)
             }
+            */
         }
 
         webSocket.onDisconnect = { [weak self] err in
@@ -46,8 +53,9 @@ internal class ChatModel {
     }
 
     func send(_ msg: String) {
-        let json = "{\"message\":\"\(msg)\"}"
-        webSocket.write(string: json)
+        //let json = "{\"message\":\"\(msg)\"}"
+        //webSocket.write(string: json)
+        webSocket.write(string: msg)
     }
 }
 
